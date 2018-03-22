@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE project [
+]>
+
+<project name="RENEWBUY" basedir=".">
+
+	<!-- ========== Initialize Properties =================================== -->
+	<property environment="env" />
+	<property file="./build.properties" />
+	<target name="setClassPath" unless="test.classpath">
+		<path id="classpath_jars">
+			<fileset dir="${ws.home}/lib" includes="**/*.jar" />
+		</path>
+		<pathconvert pathsep=":" property="test.classpath" refid="classpath_jars" />
+	</target>
+
+	<target name="init" depends="setClassPath">
+		<tstamp>
+			<format property="start.time" pattern="MM/dd/yyyy hh:mm aa" />
+		</tstamp>
+		<condition property="ANT" value="${env.ANT_HOME}/bin/ant.bat" else="${env.ANT_HOME}/bin/ant">
+			<os family="windows" />
+		</condition>
+		<taskdef name="testng" classpath="${test.classpath}" classname="org.testng.TestNGAntTask" />
+	</target>
+
+	<!-- clean -->
+	<target name="clean">
+		<delete dir="${test.dest}" />
+		<!--<delete dir="${ws.home}/test-output" />-->
+	</target>
+
+	<target name="DeleteUnusedReports">
+		<echo message="Deleting Files Advance Report" />
+		<delete dir="${ws.home}/test-output" />
+	</target>
+
+	<!-- compile -->
+	<target name="compile" depends="init, clean">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="${test.dest}" includes="**/*" />
+
+		</delete>
+		<echo message="making directory..." />
+		<mkdir dir="${ws.home}/test-output/AdvanceReport" />
+		<mkdir dir="${test.dest}" />
+		<echo message="compiling..." />
+		<javac debug="true" destdir="${test.dest}" includes="*/*.java" srcdir="${test.src}:${test.src1}:${test.src2}:${test.src3}" target="1.8" classpath="${test.classpath}">
+		</javac>
+	</target>
+
+	<!-- bin -->
+	<target name="build" depends="init">
+	</target>
+
+	<!-- Properties Variable initialization -->
+	<target name="props_env" depends="init">
+		<propertyfile file="Config\Environmentconfig.properties" comment="Default properties">
+			<entry key="Browser" value="${env.Browser}" />
+			<entry key="Client" value="${env.Client}" />
+			<entry key="SuiteType" value="${env.SuiteType}" />
+		</propertyfile>
+	</target>
+
+
+	<!-- Smoke Testing of Renewbuy -->
+	<target name="Renewbuy_SmokeTest" depends="props_env,compile">
+		<testng classpath="${test.classpath}:${test.dest}" suitename="Renewbuy Smoke Test Suite">
+			<reporter classname="org.testng.reporters.XMLReporter">
+				<property name="generateTestResultAttributes" value="true" />
+			</reporter>
+			<xmlfileset dir="${ws.home}/BusinessUtility/testrun" includes="Renewbuy_SmokeTest.xml" />
+		</testng>
+		<zip destfile="${ws.home}/Report.zip" basedir="${ws.home}/test-output" />
+		<copy file="Report.zip" todir="${env.WORKSPACE}" />
+	</target>
+
+
+	<target name="zip">
+	</target>
+
+
+	<!-- Regression Testing of Renewbuy -->
+	<target name="Renewbuy_Regression" depends="props_env,compile">
+		<testng classpath="${test.classpath}:${test.dest}" suitename="Renewbuy Regression Test Suite">
+			<reporter classname="org.testng.reporters.XMLReporter">
+				<property name="generateTestResultAttributes" value="true" />
+			</reporter>
+			<xmlfileset dir="${ws.home}/BusinessUtility/testrun" includes="Renewbuy_Regression.xml" />
+		</testng>
+		<zip destfile="${ws.home}/Report.zip" basedir="${ws.home}/test-output" />
+		<copy file="Report.zip" todir="${env.WORKSPACE}" />
+	</target>
+
+	
+
+	<!-- End of Targets of Renewbuy Test Suites -->
+
+	<path id="test.c">
+		<fileset dir="${ws.home}/lib" includes="*.jar" />
+	</path>
+
+	<target name="makexsltreports">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="${ws.home}/XSLT_Reports" includes="**/*" />
+		</delete>
+		<mkdir dir="${ws.home}/XSLT_Reports/output" />
+
+		<xslt in="test-output/testng-results.xml" style="xslt/testng-results.xsl" out="${ws.home}/XSLT_Reports/output/index.html" classpathref="test.c" processor="SaxonLiaison">
+			<param name="testNgXslt.outputDir" expression="${ws.home}/XSLT_Reports/output/" />
+			<param name="testNgXslt.showRuntimeTotals" expression="true" />
+		</xslt>
+		<copy file="XSLT_Reports/output/overview.html" todir="${env.WORKSPACE}" />
+	</target>
+
+</project>

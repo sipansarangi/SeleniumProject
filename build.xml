@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE project [
+]>
+
+<project name="RenewBuy" basedir=".">
+
+	<!-- ========== Initialize Properties =================================== -->
+	<property environment="env" />
+	<property file="./build.properties" />
+	<target name="setClassPath" unless="test.classpath">
+		<path id="classpath_jars">
+			<fileset dir="${ws.home}/lib" includes="**/*.jar" />
+		</path>
+		<pathconvert pathsep=":" property="test.classpath" refid="classpath_jars" />
+	</target>
+
+	<target name="init" depends="setClassPath">
+		<tstamp>
+			<format property="start.time" pattern="MM/dd/yyyy hh:mm aa" />
+		</tstamp>
+		<condition property="ANT" value="${env.ANT_HOME}/bin/ant.bat" else="${env.ANT_HOME}/bin/ant">
+			<os family="windows" />
+		</condition>
+		<taskdef name="testng" classpath="${test.classpath}" classname="org.testng.TestNGAntTask" />
+	</target>
+
+	<!-- clean -->
+	<target name="clean">
+		<delete dir="${test.dest}" />
+		<!--<delete dir="${ws.home}/test-output" />-->
+	</target>
+
+	<target name="DeleteUnusedReports">
+		<echo message="Deleting Files Advance Report" />
+		<delete dir="${ws.home}/test-output" />
+	</target>
+
+	<!-- compile -->
+	<target name="compile" depends="init, clean">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="${test.dest}" includes="**/*" />
+
+		</delete>
+		<echo message="making directory..." />
+		<mkdir dir="${ws.home}/test-output/AdvanceReport" />
+		<mkdir dir="${test.dest}" />
+		<echo message="compiling..." />
+		<javac debug="true" destdir="${test.dest}" includes="*/*.java" srcdir="${test.src}:${test.src1}:${test.src2}" target="1.8" classpath="${test.classpath}">
+		</javac>
+	</target>
+
+	<!-- bin -->
+	<target name="build" depends="init">
+	</target>
+
+	<!-- Properties Variable initialization -->
+	<target name="props_env" depends="init">
+		<propertyfile file="Config\Environmentconfig.properties" comment="Default properties">
+			<entry key="Browser" value="${env.Browser}" />
+			<entry key="Environment" value="${env.Environment}" />
+			<entry key="SuiteType" value="${env.SuiteType}" />
+		</propertyfile>
+	</target>
+
+
+
+	<!-- Smoke Testing of RB -->
+	<target name="RB_SmokeTest" depends="props_env,compile">
+		<testng classpath="${test.classpath}:${test.dest}" suitename="RB Smoke Test Suite">
+			<reporter classname="org.testng.reporters.XMLReporter">
+				<property name="generateTestResultAttributes" value="true" />
+			</reporter>
+			<xmlfileset dir="${ws.home}/BusinessUtility/testrun" includes="Renewbuy_SmokeTest.xml" />
+		</testng>
+		<zip destfile="${ws.home}/Report.zip" basedir="${ws.home}/test-output" />
+		<copy file="Report.zip" todir="${env.WORKSPACE}" />
+	</target>
+	
+	<target name="RB_RegressionTest" depends="props_env,compile">
+		<testng classpath="${test.classpath}:${test.dest}" suitename="RB Regression Test Suite">
+			<reporter classname="org.testng.reporters.XMLReporter">
+				<property name="generateTestResultAttributes" value="true" />
+			</reporter>
+			<xmlfileset dir="${ws.home}/BusinessUtility/testrun" includes="Renewbuy_SmokeTest.xml" />
+		</testng>
+		<zip destfile="${ws.home}/Report.zip" basedir="${ws.home}/test-output" />
+		<copy file="Report.zip" todir="${env.WORKSPACE}" />
+	</target>
+
+	<target name="zip">
+	</target>
+
+</project>

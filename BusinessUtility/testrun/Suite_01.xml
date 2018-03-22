@@ -1,0 +1,13 @@
+
+
+<suite name="Suite">
+ 	   <parameter name="Browser" value="chrome" />
+		<parameter name="Environment" value="http://dev.renewbuy.com" />
+		<test name="Test Name 01">
+		<classes>
+			<class name="RB.TC_01_HomePage" />
+			</classes>
+		</test>
+
+
+</suite> 

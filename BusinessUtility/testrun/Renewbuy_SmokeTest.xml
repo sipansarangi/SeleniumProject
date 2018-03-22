@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+
+<suite name="Rights Logic Smoke Test" parallel="false"
+	thread-count="2" verbose="2">
+	<listeners>
+		<listener class-name="org.uncommons.reportng.HTMLReporter" />
+		<listener class-name="org.uncommons.reportng.JUnitXMLReporter" />
+	</listeners>
+
+
+	<test name="Renewbuy Somke Testing" 
+		preserve-order="true">
+		<groups>
+			<run>
+				<include name="Smoke"></include>
+			</run>
+		</groups>
+
+		<classes>
+			<!-- <class name="renewbuy_Script.RenewBuy_Smoke"/>
+			<class name="renewbuy_Script.Different_Insurers"/> -->
+			<class name="renewbuy_Script.RB_Health_Insurance"/> 
+			
+		</classes>
+	</test>
+</suite>

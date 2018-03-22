@@ -1,0 +1,13 @@
+.settings/
+bin/
+ExecutionLog/
+lib/
+Screenshots/
+test-output/
+TestUploadFiles/
+xslt/
+XSLT_Reports/
+chromedriver.exe
+IEDriverServer.exe
+Report.zip
+TrackChangesIn Script/
