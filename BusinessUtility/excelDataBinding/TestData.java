@@ -1,5 +1,7 @@
 package excelDataBinding;
 
+import renewbuy_Script.EngineProtectorField;
+
 public interface TestData {
 
 	Excel_Reader xlsInputData = new Excel_Reader(System.getProperty("user.dir") + "\\BusinessUtility\\ExcelDataBinding\\TestData.xlsx");
@@ -78,6 +80,10 @@ public interface TestData {
 	String IdontHavePolicy_Field                     = xlsInputData.getCellData("RB", "TestData", 105);
 	String PrevPolicyEndDate_Field                   = xlsInputData.getCellData("RB", "TestData", 106);
 	String ManufacturingYear_Field                   = xlsInputData.getCellData("RB", "TestData", 107);
+	
+	String EngineProtectorField                      = xlsInputData.getCellData("RB", "TestData", 107);
+	String ConsumablesField  = xlsInputData.getCellData("RB", "TestData", 107);
+	String KeyReplacementField  = xlsInputData.getCellData("RB", "TestData", 107);    
 	
 	
 	
