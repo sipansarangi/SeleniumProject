@@ -19,9 +19,10 @@
 		</groups>
 
 		<classes>
-			<!-- <class name="renewbuy_Script.RenewBuy_Smoke"/>
-			<class name="renewbuy_Script.Different_Insurers"/> -->
+			<class name="renewbuy_Script.RenewBuy_Smoke"/>
+			<class name="renewbuy_Script.Different_Insurers"/>
 			<class name="renewbuy_Script.RB_Health_Insurance"/> 
+			<class name="renewbuy_Script.RB_portal"/>
 			
 		</classes>
 	</test>

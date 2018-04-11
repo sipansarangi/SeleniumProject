@@ -7,7 +7,6 @@ import utility.DriverHelper;
 
 public class RB_Health_Insurance extends DriverHelper {
 	
-	
 	@Test(groups="Smoke",priority =1,enabled = true,description = "")
 	public void TC_01() throws Exception {
 		
@@ -88,7 +87,7 @@ public class RB_Health_Insurance extends DriverHelper {
 	clickOn(Loc_DateOfBirth_Day.replace("@var", "2"), "Date Of Birth Day");
 
 	selectDropdownValue(Loc_Gender, "Gender select", "Male");
-	selectDropdownValue(Loc_MaritalStatus, "Marital Status", "Unmmaried");
+	selectDropdownValue(Loc_MaritalStatus, "Marital Status", "Unmarried");
 	selectDropdownValue(Loc_Height, "Height", "5");
 	selectDropdownValue(Loc_Height1, "Height", "10");
 	sendKeys(Loc_Weight, "75", "Weight");

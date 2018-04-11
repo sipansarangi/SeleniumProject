@@ -90,10 +90,11 @@ public interface CommonLocators {
 	String loc_NomineeAge_Input                       = "//*[@id='frmPolicyDetails']/div[1]/div[3]/div[3]/div/div/div/div/input";
 	String loc_Company_owned_Checkbox                 = "//*[@id='change_filters']//*[@data-target='company_owned']//span";
 	String loc_NCB_Checkbox                           = "//*[@id='ncb_radio']/label";
-	String loc_InsuranceClaimedThisYear_Checkbox      = "//*[@id='non_new']//span[@class='btn_custom check_btn']";
+	String loc_InsuranceClaimedThisYear_Checkbox      = "//*[@id='non_new tp_only_hide']/div[1]/label/span";
 	String loc_PremiumDetails                         = "//*[@id='quotes_container']/div[1]/div[2]/div[2]";
 	String loc_PremiumDetails1                        = "//*[@id='quotes_container']/div[6]/div[2]/div[3]";
 	String loc_PremiumDetails2                        = "//*[@id='quotes_container']/div[3]/div[2]/div[3]";
+	String loc_PremiumDetails3                        = "//*[@id='quotes_container']/div[2]/div[2]/div[2]";
 	String loc_NoClaimDiscount                        = "//*[@id='quotes_container']/div[1]//span[@class='right undefined']";  
 	String Loc_PrevPolicyEndDate                      = "//*[@id='prev_pol_date_edit']";
 	String Loc_PrevPolicyEndDate_Year                 = "//*[@class='ui-datepicker-year']";
@@ -145,7 +146,7 @@ public interface CommonLocators {
 	String loc_Automatic_For_best_Quotes_Field        = "//*[@id='set_idv_container']/div[2]/label";
 	String loc_Set_Your_IDV_Field                     = "//*[@class='card btn_container tooltip_trigger']";
 	String loc_CompanyOwnedVehicle_Field              = "//*[@id='change_filters']/div[2]/div[1]/label";
-	String loc_Insuranceclaimed_This_Year_Field       = "//*[@id='non_new']/div[1]/label";
+	String loc_Insuranceclaimed_This_Year_Field       = "//*[@id='non_new tp_only_hide']/div[1]/label";
 	String loc_AdditionalCover_Field                  = "//*[@id='change_filters']/div[3]/div/h5";
 	String loc_ZeroDepreciation_Field                 = "//*[@id='change_filters']/div[3]/div/label[1]";
 	String Loc_EngineProtectorField                   = "//*[@id='change_filters']/div[3]/div/label[2]";
@@ -170,16 +171,22 @@ public interface CommonLocators {
 	String Loc_TitleDropdown_Value                        = "//*[@class='dropdown-menu inner']//*[text()='@var']";
 	String Loc_Quote_Loading                              = "//*[@id='fetch_quotes']"; 
 	String loc_ZeroDepreciation_CheckBox                  = "//label[@data-target='zero_dep']//span[@class='btn_custom']";
-	String Loc_ZeroDepreciationField                      = "//*[@id='quotes_container']/div[4]/div[2]/div[2]/div[2]/span[1]";
+	String Loc_ZeroDepreciationField                      = "//*[@id='quotes_container']/div[3]/div[2]//*[contains(text(),'Zero Depreciation')]";
+	String Loc_ZeroDepreciationField_PRO                  = "//*[@id='quotes_container']/div[6]/div[2]/div[2]//*[contains(text(),'Zero Depreciation')]";
     String Loc_KeyReplacementCheckBox                     = "//*[@id='change_filters']/div[3]/div/label[4]/span[1]";
-    String Loc_KeyReplacementFieldPremiumDetails          = "//*[@id='quotes_container']/div[3]/div[2]/div[2]/div[3]/span[1]";
+    String Loc_KeyReplacementFieldPremiumDetails          = "//*[@id='quotes_container']/div[2]/div[2]/div[2]//*[contains(text(),'Key Replacement')]";
+    String Loc_KeyReplacementFieldPremiumDetails_PRO      = "//*[@id='quotes_container']/div[4]/div[2]/div[2]//*[contains(text(),'Key Replacement')]";
     String Loc_PassengerCover_CheckBox                    = "//*[@id='change_filters']/div[3]/div/label[5]/span[1]";
     String Loc_RoadSideAssistance_CheckBox                = "//*[@id='change_filters']/div[3]/div/label[6]/span[1]";
     String loc_PremiumDetails_Passanger_Cover             = "//*[@id='quotes_container']/div[1]/div[4]/div[1]//*[contains(text(),'Unnamed Passenger Cover')]";
     String loc_PremiumDetails_RoadSideAssistance          = "//*[@id='quotes_container']/div[1]/div[4]/div[1]//*[contains(text(),'RoadSide Assistance')]";
-	
-	
-	
+    String loc_PremiumDetails_RoadSideAssistance1         = "//*[@id='quotes_container']/div[2]/div[4]/div[1]//*[contains(text(),'RoadSide Assistance')]";
+	String Loc_NoClaimDiscount_Value                      = "//*[@id='quotes_container']/div[1]/div[4]/div[1]/div[3]/span[2]";
+	String loc_NCB_0                                      = "//*[@id='ncb_radio']/label[1]";
+	String loc_NCB_20                                     = "//*[@id='ncb_radio']/label[2]/span";
+	String loc_NCB_25                                     = "//*[@id='ncb_radio']/label[3]/span";
+	String loc_NCB_35                                     = "//*[@id='ncb_radio']/label[4]/span";
+	String loc_NCB_45                                     = "//*[@id='ncb_radio']/label[5]/span";
 		
 	
 	

@@ -1,15 +1,21 @@
 package utility;
 
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,8 +56,10 @@ import org.testng.Reporter;
 import org.testng.SkipException;
 import org.testng.TestListenerAdapter;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
 
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.LogStatus;
@@ -122,12 +130,12 @@ public class DriverHelper extends TestListenerAdapter implements TestData,Common
 		String coloredtext  = "<span style=\"color:"+ color + ";\">"+text+"</span>";
 		return coloredtext;
 	}
-
-	@BeforeMethod(alwaysRun=true)
-	public void getBrowser(Method method) throws Exception {
+  
+	@BeforeMethod(alwaysRun=true)	
+    public void getBrowser(Method method) throws Exception {
 		TC_Status = "Passed";
-		//Runtime.getRuntime().exec("cmd /c Taskkill /IM chrome.exe /F");
-		//Runtime.getRuntime().exec("cmd /c Taskkill /IM firefox.exe /F");
+		Runtime.getRuntime().exec("cmd /c Taskkill /IM chrome.exe /F");
+//		Runtime.getRuntime().exec("cmd /c Taskkill /IM firefox.exe /F");
 		Runtime.getRuntime().exec("cmd /c Taskkill /IM iexplore.exe /F");
 		sleepTime(2);
 
@@ -343,7 +351,9 @@ public class DriverHelper extends TestListenerAdapter implements TestData,Common
 			result = By.name(locator.replace("name=", ""));
 		} else if (locator.startsWith("link=")) {
 			result = By.linkText(locator.replace("link=", ""));
-		} else {
+		} else if (locator.startsWith("link=")) {
+			result = By.partialLinkText(locator.replace("partialLink=", ""));
+		}else {
 			result = By.id(locator);
 		}
 		return result;
@@ -377,6 +387,33 @@ public class DriverHelper extends TestListenerAdapter implements TestData,Common
 			}
 
 		}
+	
+	public void Clear(String Locator,String WebElementNameOfLocator) throws Exception {
+
+		try {
+			Assert.assertTrue(isElementPresent(Locator));
+
+			WebElement elem;
+			try {
+				elem = driver.findElement(ByLocator(Locator));
+				elem.clear();
+			} catch (Exception e) {
+
+			}
+			
+
+		} catch (AssertionError e) {
+			ExecutionLog.Log("====Failed==== \"" + WebElementNameOfLocator + "\" field is not present'" + WebElementNameOfLocator + "'");
+			getScreenShotOnCheckpointFailure(WebElementNameOfLocator.replace("*", ""));
+			e.printStackTrace();;
+		} catch (Exception e) {
+			ExecutionLog.Log("====Failed==== \"" + WebElementNameOfLocator + "\" field is not present'" + WebElementNameOfLocator + "'");
+			getScreenShotOnCheckpointFailure(WebElementNameOfLocator.replace("*", ""));
+			e.printStackTrace();;
+
+		}
+
+	}
 
 	public void sendKeys_WithoutClear(String Locator, String TestData, String WebElementNameOfLocator, String LabelNameFromExcel) throws Exception {
 
@@ -425,15 +462,14 @@ public class DriverHelper extends TestListenerAdapter implements TestData,Common
 
 	}
 
-	public void moveMouse(String Locator, String WebElementNameOfLocator, Object... checkStatusFromExcel)throws Exception{
+	public void moveMouse(String Locator, String WebElementNameOfLocator)throws Exception{
 
 		try {
-			if(!(checkStatusFromExcel[0].toString().contains("N/A"))) {
 				Actions act = new Actions(driver);
 				WebElement elem = driver.findElement(ByLocator(Locator));
 				act.moveToElement(elem).build().perform();
 				ExecutionLog.Log("Moved Mouse over '" + WebElementNameOfLocator + "'");
-			}
+			
 		} catch (IndexOutOfBoundsException e) {			
 			try {
 				Actions act = new Actions(driver);
@@ -1698,10 +1734,9 @@ public class DriverHelper extends TestListenerAdapter implements TestData,Common
 		}
 		report.flush();
 	}
-
-	public void verifyCheckBoxStatus(String locator, boolean Expected, String WebElementNameOfLocator, Object... checkStatusFromExcel) throws Exception {
+	public void verifyCheckBoxStatus(String locator, boolean Expected, String WebElementNameOfLocator) throws Exception {
 		boolean checkBoxStatus = false;
-		if(!checkStatusFromExcel[0].toString().contains("N/A")) {			
+		
 			try {
 				checkBoxStatus = driver.findElement(ByLocator(locator)).isSelected();
 				ExecutionLog.Log("Verifying the Check box status of " + WebElementNameOfLocator);
@@ -1714,7 +1749,7 @@ public class DriverHelper extends TestListenerAdapter implements TestData,Common
 				e.printStackTrace();
 			}
 
-		}
+		
 	}
 	
 	public void screenshot(String testCaseName){
@@ -1788,15 +1823,77 @@ public class DriverHelper extends TestListenerAdapter implements TestData,Common
 
 	}
 	
-	public void VerifyURL() throws Exception {
+	public void VerifyURL(String Capture_URL) throws Exception {
 
 		try {
 			String URL_RUN = driver.getCurrentUrl();
-			Assert.assertEquals(URL_RUN, URL );
-			} catch (Exception e) {
+			Assert.assertEquals(URL_RUN, Capture_URL );
+			} catch (AssertionError e) {
+				
 
 			}
 		
 		}
+
+	public void ResponseCodeCheck(String URL_Verify) throws Exception{
+		ExecutionLog executionLog = new ExecutionLog();	
+		String dateTime = executionLog.getDate();
+		String fileName = executionLog.getFileName();
+          try { 
+        	  FileWriter fstream = new FileWriter(System.getProperty("user.dir")+"\\ExecutionLog\\"+fileName+".txt",true);
+  			BufferedWriter out = new BufferedWriter(fstream);
+  			
+        	URL url = new URL(URL_Verify);
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.connect();
+           
+            int  code = connection.getResponseCode();
+            String ResponseCode = Integer.toString(code);
+            if(ResponseCode.contains("404")){
+            	
+				ExtentTestManager.getTest().log(LogStatus.FAIL,DriverHelper.color("red", ResponseCode));
+				Reporter.log("<html><body><b>||"+DriverHelper.color("red", ResponseCode)+"||<br></br></b></html></body>");
+				out.write(DriverHelper.color("red", ResponseCode));
+				DriverHelper.TC_Status = "Failed";
+				}
+          }catch(Exception e){
+        	  
+          }
+			
+       }
+	
+	public void URL_PresentWithResponseCodeCheck(String Text,String Enter_URL) throws Exception {
 		
+		try {
+			verifyElementPresent("//*[@class='footTop clearfix']//*[contains(text(),'"+Text+"')]", Text);
+			clickOn("//*[@class='footTop clearfix']//*[contains(text(),'"+Text+"')]", Text);
+			WaitForElementPresent("//div[@class='callusWrap']");
+			sleepTime(3);
+			VerifyURL(Enter_URL);
+			ResponseCodeCheck(Enter_URL);
+			driver.navigate().back();
+			WaitForElementPresent("instantQuoteMotor");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public static String CurerentMonthplusOneMonth() {
+		YearMonth thisMonth    = YearMonth.now();
+		YearMonth OneMonthAdd = thisMonth.plusMonths(1);
+		
+		DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MMMM");
+		
+		String  CurerentMonthplusOneMonth = OneMonthAdd.format(monthYearFormatter);
+		return CurerentMonthplusOneMonth;
+	}
+	public static String CurerentMonth() {
+		YearMonth thisMonth    = YearMonth.now();
+		
+		DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MMMM");
+		
+		String  CurerentMonth = thisMonth.format(monthYearFormatter);
+		return CurerentMonth.toUpperCase();
+	}
 }

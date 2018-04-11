@@ -3,6 +3,7 @@ package commonFunctions;
 
 import java.util.Random;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import Reporting.ExecutionLog;
 import utility.DriverHelper;
@@ -52,6 +53,13 @@ public class Renewbuy extends DriverHelper {
 		 * */
 		WaitForElementPresent(loc_VehicleInput);
 		sendKeys(loc_VehicleInput, TestData[0].toString(), "Enter "+TestData[0].toString()+""); //VehicleName
+		sleepTime(2);
+		if (!driver.findElement(By.xpath(loc_Contains_Text.replace("@var", TestData[1].toString()))).isDisplayed()) {
+			driver.navigate().refresh();
+			WaitForElementPresent(loc_VehicleInput);
+			sendKeys(loc_VehicleInput, TestData[0].toString(), "Enter "+TestData[0].toString()+""); //VehicleName
+			sleepTime(2);
+		}
 		clickOn(loc_Contains_Text.replace("@var", TestData[1].toString()), "Select Vehicle "+TestData[1].toString()+""); //FullVehicleName
 		selectDropdownValue(loc_PurchaseYear, "Year", PurchaseYear.replace(".0", ""));
 		WaitForElementPresent("instantQuoteMotor");
@@ -62,6 +70,7 @@ public class Renewbuy extends DriverHelper {
 		ExecutionLog.Log("Vehicle Model");
 		WaitForElementPresent(Buy_Button_Locater);
 		WaitForElementToClickable(Buy_Button_Locater);
+		sleepTime(3);
 		verifyTextMatches(loc_VehicleModel_QuotePage, "Vehicle Model Field", VehicleModel_Header);
 		verifyElementPresent(loc_VehicleModel_QuotePageEditButton, "Vehicle Model Edit Button");
 		sleepTime(2);
@@ -77,7 +86,7 @@ public class Renewbuy extends DriverHelper {
     	ExecutionLog.Log("Purchase Date");
     	verifyTextMatches(loc_PurchaseDate_QuotePage, "Purchase Date Field", PurchaseDate_Header);
     	verifyElementPresent(loc_PurchaseDate_QuotePageEditButton, "Purchase Date Edit Button");
-    	verifyTextMatches(loc_PurchaseDate_QuotePageInput, "Vehicle Model Quote Page", PurchaseDate.replace(".0", ""));
+    	verifyTextMatches(loc_PurchaseDate_QuotePageInput, "Vehicle Model Quote Page", PurchaseDate.replace("Month", CurerentMonth()));
     	
     	//Previous Insurer
     	ExecutionLog.Log("Previous Insurer");
@@ -102,7 +111,7 @@ public class Renewbuy extends DriverHelper {
     		sleepTime(1);
     		clickUsingJSExecutor(Loc_PrevPolicyEndDate, "Prev Policy End Date");
     		WaitForElementPresent(Loc_PrevPolicyEndDate_Year);
-    		selectDropdownValue(Loc_PrevPolicyEndDate_Year, "Year Select ", "2008");
+    		selectDropdownValue(Loc_PrevPolicyEndDate_Year, "Year Select ", "2012");
     		clickOn(Loc_PrevPolicyEndDate_Date, "Select 8 ");
     		
     	}
@@ -113,6 +122,8 @@ public class Renewbuy extends DriverHelper {
         	WaitForElementToClickable(loc_BuyButton);
         	sleepTime(3);
         	verifyElementNotDisplayed(loc_NCB_Checkbox, "Existing No Claim Bonus (NCB)");
+        	WaitForElementToClickable(loc_PremiumDetails);
+        	sleepTime(2);
         	clickOn(loc_PremiumDetails, "Premium Details");
         	WaitForElementToClickable(loc_NoClaimDiscount);
         	verifyTextMatches(loc_NoClaimDiscount, "No Claim Discount", "0%");
@@ -127,7 +138,7 @@ public class Renewbuy extends DriverHelper {
     		sleepTime(2);
     	}
     	WaitForElementToClickable(Buy_Button_Locater);
-    	sleepTime(2);
+    	sleepTime(10);
     	clickOn(Buy_Button_Locater, "Buy Button");
     	
     	if(isElementDisplayed(loc_SubmitButton,"Buy Button")) {
@@ -181,6 +192,8 @@ public class Renewbuy extends DriverHelper {
          // 3rd Page 
          WaitForElementPresent(Loc_RegistrationNo_Input);
          
+         WaitForElementPresent(Loc_RegistrationNo);
+         sleepTime(2);
          verifyTextMatches(Loc_RegistrationNo, "Registration No", RegistrationNo);
          verifyTextMatches(Loc_ChassisNo, "Chassis No", ChassisNo);
          verifyTextMatches(Loc_EngineNo, "Engine No", EngineNo);
@@ -205,7 +218,9 @@ public class Renewbuy extends DriverHelper {
          clickOn(Loc_ExistingInsurerDropdown,"Existing Insurer Drop down");
          sendKeys(Loc_ExistingInsurer_Input, ExistingInsurerData, "Existing Insurer");
          Enter();
+         sleepTime(3);
          //Previous Policy Expiry Date
+         if(TestData[4].toString().contains("Yes")) {
          ExecutionLog.Log("Previous Policy Expiry Date");
          //Day
          ExecutionLog.Log("Day");
@@ -223,12 +238,16 @@ public class Renewbuy extends DriverHelper {
          clickOn(loc_PreviousPolicyEndYear,"Previous Policy End Year");
          sleepTime(2);
          sendKeys(loc_PreviousPolicyEndYear_Input, PreviousPolicyEndYear, "Enter Year");
-         Enter(); 
+         Enter();
+         }
+       //Next
          clickUsingJSExecutor(Loc_NextButton, "Enter Next");
-        
-         //Next
+     
+         
          WaitForElementPresent(loc_TermsAndConditionsCheckBox);
+         sleepTime(2);
          if(isElementPresent(loc_NomineeName)){
+        	 clickOn(loc_NomineeName, "");
          sendKeys(loc_NomineeName, "Test Name", "Nominee Name");
          //Nominee Relation
          clickOn(loc_NomineeNameRelation,"Nominee Relation");

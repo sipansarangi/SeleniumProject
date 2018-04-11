@@ -15,6 +15,7 @@ public class RenewBuy_Smoke extends DriverHelper {
 		Renewbuy RB = new Renewbuy(driver);
 		RB.HomePageHeaderVerify();
 		RB.End_To_End_Flow(loc_BuyButton,VehicleName,FullVehicleName,"N/A","N/A","N/A","N/A");
+		
 		testCaseStatus();
 	}
 	
